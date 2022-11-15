@@ -29,19 +29,19 @@ var initWalletCore = core.initWasm().then(async (walletCore) => {
 	fs.mkdirSync(testDir, { recursive: true });
 	const storage = new core.KeyStore.FileSystemStorage(testDir);
 	const keystore = new core.KeyStore.Default(walletCore, storage);
-
 	var walletSecond = await keystore.import(mnemonic, 'test wallet', password, [
 		walletCore.CoinType.ethereum,
 	]);
 	const stats = fs.statSync(storage.getFilename(walletSecond.id));
-    const account = walletSecond.activeAccounts[0];
-    const key = await keystore.getKey(walletSecond.id, password, account);
-    const wallets = await keystore.loadAll();
-    console.log('multi-coin wallet second ---->', walletSecond);
-    await wallets.forEach((w) => {
-      keystore.delete(w.id, password);
-    });
-    
+	const account = walletSecond.activeAccounts[0];
+	const key = await keystore.getKey(walletSecond.id, password, account);
+
+	const wallets = await keystore.loadAll();
+	await wallets.forEach((w) => {
+		keystore.delete(w.id, password);
+	});
+
+	console.log('multi-coin wallet second ---->', walletSecond);
 	/* console.log('storage ---->', storage);
 	console.log('keystore ---->', keystore);
 	console.log('stats ---->', stats); */
